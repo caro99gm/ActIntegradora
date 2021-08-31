@@ -14,7 +14,7 @@ public class CreateBoxes : MonoBehaviour
         ArrBoxes = new List<GameObject>();
         for(int i = 0; i < NumBoxes; i++){
             float x = Random.Range(-18 , -2);
-            float y = 0.32f;
+            float y = 0.34f;
             float z = Random.Range(-12, 12);   
 
             Instantiate(box, new Vector3(x,y,z), Quaternion.Euler(0,0,0));   
