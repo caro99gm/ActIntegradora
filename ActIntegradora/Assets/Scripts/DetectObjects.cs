@@ -2,23 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class DetectObjects : MonoBehaviour
 {
     void OnCollisionEnter(Collision collision){
-        if(collision.gameObject.name == "Box"){
-            print("caja");
+        if(collision.gameObject.tag == "Box"){
+            Debug.Log("caja");
         }
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if(collision.gameObject.tag == "Rack"){
+            print("rack");
+        }
+        if(collision.gameObject.tag == "Robot"){
+            print("robot");
+        }
     }
 }
 //poner script en el robot
