@@ -57,7 +57,7 @@ class agenteCaja(ap.Agent):
         self.picked = True
         
     def removeCaja(self):
-        remove_agents(self)
+        self.grid.remove_agents(self)
 
 class agenteRobot(ap.Agent):
     def setup(self):
@@ -66,6 +66,8 @@ class agenteRobot(ap.Agent):
         self.group = self.random.choice(range(self.p.n_groups))
         self.move = {"l": (-1,0) ,"r": (1,0),"u": (0,-1),"d": (0,1)}
         self.stuck = False
+        self.izquierda = False
+        self.encontrePila = False
     
     def setup_parameters(self, velocidad, cajaCarga, posX, posZ,n,m):
         self.velocidad = velocidad #bool, solo on y off
@@ -85,26 +87,71 @@ class agenteRobot(ap.Agent):
         else:
             velocidad = True
     
-    def actualizarPosicion(self, posX, posZ):
-        keys = []
-        for k in self.move:
-            keys.append(k)
-        direction = self.random.choice(k)
+    def actualizarPosicion(self):
         
-        #self.move = {"l": (-1,0) ,"r": (1,0),"u": (0,-1),"d": (0,1)}
-        self.posX = self.posX + self.move[direction][0]
-        self.posZ = self.posZ + self.move[direction][1]
-    
-        #derecha
-        self.grid.move_by(self, (self.move[direction][0],self.move[direction][1]))
+        if self.stuck: return
+        
+        
+        if self.cajaCarga:
+            print(self, "CARGO UNA CAJAAAAAAAAA :))))")
+            if self.encontrePila:
+                if 'r' in self.move:
+                    print(self, "me voy pala derecha")
+                    self._move(1,0)
+                else:
+                    self._randomMove()
+                # ve hacia la derecha
+            elif self.izquierda:
+                if 'u' in self.move:
+                    print(self, "me voy parriba ")
+                    self._move(0,-1)
+                else:
+                    self._move(1,0)
+                    self._move(0,-1)
+                    self._move(0,-1)
+                    self._move(-1,0)
+                    self._randomMove()
+            else:
+                if 'l' in self.move:
+                    print(self, "me voy pal izquierda")
+                    self._move(-1,0)
+                else:
+                    self._randomMove()
+            #else
+                # ve hacia la izquierda
+        else:
+            self._randomMove()
         #izquiera
         #self.grid.move_by(self, (-1,0))
         #arriba
         #self.grid.move_by(self, (0,1))
         #abajo
         #self.grid.move_by(self, (0,-1))
+            
+    def _move(self,horizontal,vertical):
+        self.grid.move_by(self, (horizontal,vertical))
+        self.posX += horizontal
+        self.posZ += vertical
+            
+    def _randomMove(self):
+        if self.cajaCarga:
+            print(self, "me blokiaron voy random :((((")
+        
+        keys = []
+        for k in self.move:
+            keys.append(k)
+        #print(self,"possible moves: ", keys)
+        
+        number = random.randint(0,len(keys)-1)
+        direction = keys[number]
+        #print(self,"choice:", direction, number)
+        #self.move = {"l": (-1,0) ,"r": (1,0),"u": (0,-1),"d": (0,1)}
+
+        #derecha
+        self._move(self.move[direction][0] , self.move[direction][1])
 
     def depositaCaja(self, pila):
+        print('PUSE LA CAJAAAAAAAAAAAAA', self.cajaCarga)
         pila.aumentarPila()
         self.cajaCarga.removeCaja()
         self.cajaCarga = None
@@ -114,26 +161,36 @@ class agenteRobot(ap.Agent):
         #Campo libre
         #if self.posX+1 == campo:
         #    actualizarPosicion(self.posX, self.posZ)
+        self.izquierda = False
+        self.encontrePila = False
         self.move = {"l": (-1,0) ,"r": (1,0),"u": (0,-1),"d": (0,1)}
         if self.posX == self.n-1:
             self.move.pop('r')
         if self.posX == 0:
             self.move.pop('l')
+            self.izquierda = True
         if self.posZ == self.m-1:
             self.move.pop('d')
         if self.posZ == 0:
             self.move.pop('u')
         neighbors = self.grid.neighbors(self)
         for n in neighbors:
-            if self.cajaCarga and n == "agentePila" and n.cajas < 5:
-                #deposita la caja
-                for pos in self.move:
-                    if self.grid.positions[n] == (posX + self.move[pos][0],posZ + self.positions[pos][1]): #arriba
-                        self.move.pop(pos)
-                        continue
+            if self.cajaCarga and n.type == "agentePila":
+                if n.cajas < 5:
+                    self.depositaCaja(n)
+                else:
+                    self.encontrePila = True
+            deletePos = []
+            for pos in self.move:
+                if self.grid.positions[n] == (self.posX + self.move[pos][0],self.posZ + self.move[pos][1]):
+                    deletePos.append(pos)
+            for p in deletePos:
+                self.move.pop(p)
         if len(self.move) == 0:
             stuck = True
-
+            print('AIUDAAAAAAAAAAAAAAAAAAA')
+        else:
+            stuck = False
             
         #Pared
         #Cajas
@@ -149,7 +206,7 @@ class agenteRobot(ap.Agent):
         
         for n in neighbors:
             if(n.type == "agenteCaja" and not n.picked):
-                print("PICKEO LA CAJAAAAAAAAAA")
+                print("PICKEO LA CAJAAAAAAAAAAAAAAA", n)
                 self.cajaCarga = n
                 n.pickup()
                 break
@@ -162,12 +219,18 @@ class modeloRobot(ap.Model):
     def setup(self):
         s = self.p.size
         n = 5
-        n_caja = random.randrange(self.p.size - 1) + 1
+        self.n_caja = random.randrange(self.p.size - 1) + 1
+        pilas = self.n_caja // 5
+        if(self.n_caja % 5 != 0):
+            pilas +=1
         self.grid = ap.Grid(self, (s, s), track_empty=True)
         self.agents = ap.AgentList(self, n, agenteRobot)
-        self.cajas = ap.AgentList(self,n_caja, agenteCaja)
+        self.cajas = ap.AgentList(self,self.n_caja, agenteCaja)
+        self.pilas = ap.AgentList(self,pilas, agentePila)
+        self.grid.add_agents(self.pilas,random = False, empty = True, positions = [(i,0) for i in range(pilas)])
         self.grid.add_agents(self.agents, random = True, empty = True)
         self.grid.add_agents(self.cajas, random = True, empty = True)
+        
         
         self.agents.setup_parameters(self.p.velocidad, self.p.cajaCarga, self.p.posX, self.p.posZ,s,s)
     
@@ -177,13 +240,19 @@ class modeloRobot(ap.Model):
             
         self.agents.detectarCargaCaja()
         self.agents.detectarObstaculos()
-        self.agents.actualizarPosicion(self.p.posX, self.p.posZ)
+        self.agents.actualizarPosicion()
+        
         
         #if(stuck):
          #   self.agents.agenteRobot.position - 1 para abajo
 
     def update(self):
-        self.agents.actualizarVelocidad(self.p.velocidad)
+        #self.agents.actualizarVelocidad(self.p.velocidad)
+        cajitas = 0
+        for pila in self.pilas:
+            cajitas += pila.cajas
+        if cajitas == self.n_caja:
+            self.stop()
     
     def end(self):
         self.report('Distancia recorrida por los vehiculos en el eje x', self.agents.posX)
