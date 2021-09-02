@@ -7,6 +7,15 @@ TagManager:
   - Box
   - Robot
   - Rack
+  - Box1
+  - Box2
+  - Box3
+  - Box4
+  - Box5
+  - DownWall
+  - TopWall
+  - LeftWall
+  - RightWall
   layers:
   - Default
   - TransparentFX
