@@ -16,6 +16,7 @@ TagManager:
   - TopWall
   - LeftWall
   - RightWall
+  - FakeRack
   layers:
   - Default
   - TransparentFX

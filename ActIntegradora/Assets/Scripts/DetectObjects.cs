@@ -83,3 +83,4 @@ public class DetectObjects : MonoBehaviour
 //Faltanes:
 //Mover robot
 //Chocar entre robots
+//Solo se toma una caja
