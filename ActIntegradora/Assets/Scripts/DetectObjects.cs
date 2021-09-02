@@ -5,6 +5,7 @@ using UnityEngine;
 public class DetectObjects : MonoBehaviour
 {
     public bool check = false;
+    public bool OneBox = true;
     public GameObject Box1;
     public GameObject Box2;
     public GameObject Box3;
@@ -14,20 +15,10 @@ public class DetectObjects : MonoBehaviour
     void OnCollisionEnter(Collision collision){
         GameObject objeto = collision.gameObject;
 
-        if(collision.gameObject.tag == "Box"){
+        if(collision.gameObject.tag == "Box" && OneBox){
             objeto.transform.parent = transform;
             check = true;
-            //while(collision.gameObject.tag == "LeftWall"){
-                //transform.Translate(Vector3.left*Time.deltaTime*10);
-            //}
-            //while(collision.gameObject.tag == "Rack"){
-                transform.Translate(Vector3.up*Time.deltaTime*10);
-                if(collision.gameObject.tag == "TopWall"){
-                    //while(collision.gameObject.tag != "Rack"){
-                        //transform.Translate(Vector3.right*Time.deltaTime*10);
-                    //}
-                }
-            //}
+            OneBox = false;
         }
 
         if(check){
@@ -77,10 +68,20 @@ public class DetectObjects : MonoBehaviour
             print("robot");
         }
     }
+
+    void Update(){
+//while(collision.gameObject.tag == "LeftWall"){
+                //transform.Translate(Vector3.left*Time.deltaTime*10);
+            //}
+            //while(collision.gameObject.tag == "Rack"){
+                //while(collision.gameObject.tag != "Rack"){
+                        //transform.Translate(Vector3.right*Time.deltaTime*10);
+                    //}}
+
+    }
 }
 
 
 //Faltanes:
 //Mover robot
 //Chocar entre robots
-//Solo se toma una caja
