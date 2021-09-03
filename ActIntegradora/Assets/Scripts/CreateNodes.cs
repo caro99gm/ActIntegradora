@@ -6,13 +6,14 @@ public class CreateNodes : MonoBehaviour
 {
     public GameObject Nodo;
 
-    int NumNodos = 90;
-    List<GameObject> ArrNodos;
+    int NumNodos = 81;
+    public GameObject[,] arrNodos;
 
 //-12.14 15.8
-    void Start()
+    void Awake()
     {
-        ArrNodos = new List<GameObject>();
+
+        arrNodos = new GameObject[9,9];
         for(int i = 0; i < NumNodos; i++){
             float y = 0.02392491f;
             float z = -12.14f + 3.5f* (i % 9);
@@ -30,32 +31,64 @@ public class CreateNodes : MonoBehaviour
             float x9 = -4.57f;
 
             if(i < 9){
-                Instantiate(Nodo, new Vector3(x1,y,z), Quaternion.Euler(0,0,0));
+                arrNodos[0,i % 9] = Instantiate(Nodo, new Vector3(x1,y,z), Quaternion.Euler(0,0,0));
             }
             else if(i < 18){
-                Instantiate(Nodo, new Vector3(x2,y,z), Quaternion.Euler(0,0,0));
+                arrNodos[1,i % 9] = Instantiate(Nodo, new Vector3(x2,y,z), Quaternion.Euler(0,0,0));
             }
             else if(i < 27){
-                Instantiate(Nodo, new Vector3(x3,y,z), Quaternion.Euler(0,0,0));
+                arrNodos[2,i % 9] = Instantiate(Nodo, new Vector3(x3,y,z), Quaternion.Euler(0,0,0));
             }  
             else if(i < 36){
-                Instantiate(Nodo, new Vector3(x4,y,z), Quaternion.Euler(0,0,0));
+                arrNodos[3,i % 9] = Instantiate(Nodo, new Vector3(x4,y,z), Quaternion.Euler(0,0,0));
             } 
             else if(i < 45){
-                Instantiate(Nodo, new Vector3(x5,y,z), Quaternion.Euler(0,0,0));
+                arrNodos[4,i % 9] = Instantiate(Nodo, new Vector3(x5,y,z), Quaternion.Euler(0,0,0));
             }  
             else if(i < 54){
-                Instantiate(Nodo, new Vector3(x6,y,z), Quaternion.Euler(0,0,0));
+                arrNodos[5,i % 9] = Instantiate(Nodo, new Vector3(x6,y,z), Quaternion.Euler(0,0,0));
             }   
             else if(i < 63){
-                Instantiate(Nodo, new Vector3(x7,y,z), Quaternion.Euler(0,0,0));
+                arrNodos[6,i % 9] = Instantiate(Nodo, new Vector3(x7,y,z), Quaternion.Euler(0,0,0));
             }  
             else if(i < 72){
-                Instantiate(Nodo, new Vector3(x8,y,z), Quaternion.Euler(0,0,0));
+                arrNodos[7,i % 9] = Instantiate(Nodo, new Vector3(x8,y,z), Quaternion.Euler(0,0,0));
             }   
              else if(i < 81){
-                Instantiate(Nodo, new Vector3(x9,y,z), Quaternion.Euler(0,0,0));
+                arrNodos[8,i % 9] = Instantiate(Nodo, new Vector3(x9,y,z), Quaternion.Euler(0,0,0));
             }                     
+        }
+
+        int decide = 0;
+        for (int i = 0; i < 9; i++ ){
+            // 0 1 2 3 4 5 6 7 8 
+            // x s x x s x x s x
+            for (int j = 0; j < 9; j++){
+                Neighbors current = arrNodos[i,j].GetComponent<Neighbors>();
+                if(j == 0 || j == 8){
+                    // si i-1 < 0 pos no o i+1>=9 pos no
+                    if(i+1 < 9) current.up = arrNodos[i+1,j];
+                    if(i-1 >= 0) current.down = arrNodos[i-1,j];
+                }
+                else if(decide == 0){
+                    // nodo [i,j].neighbors.append(nodo[i+1,j])
+                    current.up = arrNodos[i+1,j];
+                }
+                else if (decide == -1){
+                    // nodo [i,j].neighbors.append(nodo[i-1,j])
+                    current.down = arrNodos[i-1,j];
+                }
+                else{
+                    print("fila"+i);
+                    current.up = arrNodos[i+1,j];
+                    current.down = arrNodos[i-1,j];
+                }
+                if(j-1 >= 0) current.right = arrNodos[i,j-1];
+                if(j+1 < 9) current.left = arrNodos[i,j+1];
+            }
+            decide ++;
+            if(decide > 1) decide = -1;
+            print(decide);
         }
     }
 }

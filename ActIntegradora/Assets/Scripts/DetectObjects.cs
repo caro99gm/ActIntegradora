@@ -13,6 +13,8 @@ public class DetectObjects : MonoBehaviour
     public GameObject Box5;
     private GameObject objeto;
 
+    private Transform objective;
+
     void OnCollisionEnter(Collision collision){
         
 
@@ -74,6 +76,8 @@ public class DetectObjects : MonoBehaviour
     }
 
     void Update(){
+
+        transform.Translate(Vector3.forward * Time.deltaTime);
 //while(collision.gameObject.tag == "LeftWall"){
                 //transform.Translate(Vector3.left*Time.deltaTime*10);
             //}
