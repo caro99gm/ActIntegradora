@@ -85,7 +85,10 @@ public class DetectObjects : MonoBehaviour
     }
 }
 
-
-//Faltanes:
-//Mover robot
-//Chocar entre robots
+//1. Ir buscando cajas
+//2. Tengo una caja, ir hasta arriba a la izquierda a dejarla
+//3. El rack no empieza desde la esquina de la izquierda
+//4. Moverte hasta la derecha hasta encontrar el rack
+//5. Si el rack tiene menor a 5 cajas, dejarla
+//6. Si tiene mas de 5, dejarla en el siguiente rack que se encuentre mas adelante
+//7. Robot choca

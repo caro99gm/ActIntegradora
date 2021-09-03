@@ -7,8 +7,8 @@ public class CreateRacks : MonoBehaviour
     public GameObject Rack;
     public GameObject FakeRack;
 
-    public int NumRacks = 8;
-    public int NumFakeRacks = 24;
+    int NumRacks = 9;
+    int NumFakeRacks = 27;
     List<GameObject> ArrRacks;
     List<GameObject> ArrFakeRacks;
 
@@ -17,19 +17,19 @@ public class CreateRacks : MonoBehaviour
         ArrFakeRacks = new List<GameObject>();
         for(int i = 0; i < NumFakeRacks; i++){
             float y = 0.02392491f;
-            float z = Random.Range(-10, 11);
+            float z = -8.5f + 2.625f * (i % 9);
 
             float x2 = -8.94f;
             float x3 = -14.84f;
             float x4 = -20.8f;
 
-            if(i < 8){
+            if(i < 9){
                 Instantiate(FakeRack, new Vector3(x2,y,z), Quaternion.Euler(0,0,0));
             }
-            else if(i < 16){
+            else if(i < 18){
                 Instantiate(FakeRack, new Vector3(x3,y,z), Quaternion.Euler(0,0,0));
             }
-            else if(i < 24){
+            else if(i < 27){
                 Instantiate(FakeRack, new Vector3(x4,y,z), Quaternion.Euler(0,0,0));
             }            
         }
@@ -38,7 +38,7 @@ public class CreateRacks : MonoBehaviour
         for(int i = 0; i < NumRacks; i++){
             float x1 = -3.04f;
             float y = 0.02392491f;
-            float z = Random.Range(-10, 11);
+            float z = -8.5f + 2.625f * (i % 8);
 
             Instantiate(Rack, new Vector3(x1,y,z), Quaternion.Euler(0,0,0));
         }
