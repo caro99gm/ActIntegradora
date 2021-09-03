@@ -9,7 +9,6 @@ public class CreateNodes : MonoBehaviour
     int NumNodos = 81;
     public GameObject[,] arrNodos;
 
-//-12.14 15.8
     void Awake()
     {
 

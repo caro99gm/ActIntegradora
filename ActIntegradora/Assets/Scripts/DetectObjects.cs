@@ -5,7 +5,10 @@ using UnityEngine;
 public class DetectObjects : MonoBehaviour
 {
     public bool check = false;
+    private bool checkLeft = false;
+    private bool topRow = false;
     public bool OneBox = true;
+    public int speed = 0;
     public GameObject Box1;
     public GameObject Box2;
     public GameObject Box3;
@@ -13,7 +16,11 @@ public class DetectObjects : MonoBehaviour
     public GameObject Box5;
     private GameObject objeto;
 
-    private Transform objective;
+    public GameObject objective;
+
+    void Start(){
+        speed = Random.Range(1, 5);
+    }
 
     void OnCollisionEnter(Collision collision){
         
@@ -75,24 +82,85 @@ public class DetectObjects : MonoBehaviour
         }
     }
 
+    
+
     void Update(){
+        transform.LookAt(objective.transform.position);
+        transform.Translate(Vector3.forward * Time.deltaTime * speed);
+        
+        if(Vector3.Distance(transform.position,objective.transform.position) < 1.4f){
+            //ver los nodos vecinos y elegir uno a random
+            Neighbors nextNodes = objective.GetComponent<Neighbors>();
+            if (check){
+                chooseDeliverBox(nextNodes);
+            }
+            else{
+                checkLeft = false;
+                topRow = false;
+                chooseRandom(nextNodes);
+            }
+            
+            //si lleva caja elegir el left o el up o el right 
+        }
+    }
 
-        transform.Translate(Vector3.forward * Time.deltaTime);
-//while(collision.gameObject.tag == "LeftWall"){
-                //transform.Translate(Vector3.left*Time.deltaTime*10);
-            //}
-            //while(collision.gameObject.tag == "Rack"){
-                //while(collision.gameObject.tag != "Rack"){
-                        //transform.Translate(Vector3.right*Time.deltaTime*10);
-                    //}}
+    void chooseDeliverBox(Neighbors nextNodes){
+        
+        if(checkLeft){
+            if(nextNodes.up){
+                objective = nextNodes.up;
+            }
+            else{
+                
+                transform.Translate(Vector3.left); 
+                //topRow = true;
+                objective = nextNodes.right;
+            }
+        }
+        else{
+            if(nextNodes.left){
+                objective = nextNodes.left;
+            }
+            else{
+                checkLeft = true;
+                chooseDeliverBox(nextNodes);
+            }
+        }
+    }
 
+    void chooseRandom(Neighbors nextNodes){
+        int choice = Random.Range(0,4);
+        print(choice);
+        bool picking = true;
+        while(picking){
+             switch (choice){
+                case 0:
+                    if(nextNodes.up != null){
+                        objective = nextNodes.up;
+                        picking = false;
+                    }
+                    break;
+                case 1:
+                    if(nextNodes.right != null){
+                        objective = nextNodes.right;   
+                        picking = false;
+                    }
+                    break;
+                case 2:
+                    if(nextNodes.down != null){
+                        objective = nextNodes.down;
+                        picking = false;
+                    }
+                    break;
+                default:
+                    if(nextNodes.left != null){
+                        objective = nextNodes.left;
+                        picking = false;
+                    }
+                    break;
+            }
+            choice = (choice + 1) % 4;
+        }
+           
     }
 }
-
-//1. Ir buscando cajas
-//2. Tengo una caja, ir hasta arriba a la izquierda a dejarla
-//3. El rack no empieza desde la esquina de la izquierda
-//4. Moverte hasta la derecha hasta encontrar el rack
-//5. Si el rack tiene menor a 5 cajas, dejarla
-//6. Si tiene mas de 5, dejarla en el siguiente rack que se encuentre mas adelante
-//7. Robot choca
