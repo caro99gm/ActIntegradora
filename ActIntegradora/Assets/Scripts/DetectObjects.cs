@@ -11,14 +11,18 @@ public class DetectObjects : MonoBehaviour
     public GameObject Box3;
     public GameObject Box4;
     public GameObject Box5;
+    private GameObject objeto;
 
     void OnCollisionEnter(Collision collision){
-        GameObject objeto = collision.gameObject;
+        
 
-        if(collision.gameObject.tag == "Box" && OneBox){
+        if(collision.gameObject.tag == "Box" && !check){
+            this.objeto = collision.gameObject;
             objeto.transform.parent = transform;
+            objeto.gameObject.GetComponent<Rigidbody>().useGravity = false;
             check = true;
             OneBox = false;
+            objeto.gameObject.GetComponent<BoxCollider>().enabled = false;
         }
 
         if(check){

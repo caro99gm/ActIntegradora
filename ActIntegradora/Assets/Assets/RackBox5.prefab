@@ -15,8 +15,8 @@ GameObject:
   - component: {fileID: 2338900586102874897}
   - component: {fileID: 2919712082385911058}
   m_Layer: 0
-  m_Name: RackSize (2)
-  m_TagString: Rack
+  m_Name: RackBox5
+  m_TagString: Box5
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
