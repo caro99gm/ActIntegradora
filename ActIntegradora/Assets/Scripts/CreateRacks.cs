@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CreateRacks : MonoBehaviour
-{
+//Crear los estantes en la escena
+public class CreateRacks : MonoBehaviour{
     public GameObject Rack;
     public GameObject FakeRack;
-
     int NumRacks = 9;
     int NumFakeRacks = 27;
     List<GameObject> ArrRacks;
     List<GameObject> ArrFakeRacks;
 
-    void Start()
-    {
+    void Start(){
         ArrFakeRacks = new List<GameObject>();
         for(int i = 0; i < NumFakeRacks; i++){
             float y = 0.02392491f;

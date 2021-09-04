@@ -2,17 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CreateNodes : MonoBehaviour
-{
+public class CreateNodes : MonoBehaviour{
     public GameObject Nodo;
-
     int NumNodos = 81;
     public GameObject[,] arrNodos;
 
-    void Awake()
-    {
-
+    void Awake(){ //Hablarle siempre primero que lo demas aunque este deshabilitado
         arrNodos = new GameObject[9,9];
+        //Colocar filas de los nodos necesarios
         for(int i = 0; i < NumNodos; i++){
             float y = 0.02392491f;
             float z = -12.14f + 3.5f* (i % 9);
@@ -58,27 +55,22 @@ public class CreateNodes : MonoBehaviour
             }                     
         }
 
+        //Conectar los nodos entre ellos
         int decide = 0;
-        for (int i = 0; i < 9; i++ ){
-            // 0 1 2 3 4 5 6 7 8 
-            // x s x x s x x s x
+        for (int i = 0; i < 9; i++ ){ //Iterar la matriz
             for (int j = 0; j < 9; j++){
                 Neighbors current = arrNodos[i,j].GetComponent<Neighbors>();
                 if(j == 0 || j == 8){
-                    // si i-1 < 0 pos no o i+1>=9 pos no
                     if(i+1 < 9) current.up = arrNodos[i+1,j];
                     if(i-1 >= 0) current.down = arrNodos[i-1,j];
                 }
                 else if(decide == 0){
-                    // nodo [i,j].neighbors.append(nodo[i+1,j])
                     current.up = arrNodos[i+1,j];
                 }
                 else if (decide == -1){
-                    // nodo [i,j].neighbors.append(nodo[i-1,j])
                     current.down = arrNodos[i-1,j];
                 }
                 else{
-                    print("fila"+i);
                     current.up = arrNodos[i+1,j];
                     current.down = arrNodos[i-1,j];
                 }
@@ -87,7 +79,6 @@ public class CreateNodes : MonoBehaviour
             }
             decide ++;
             if(decide > 1) decide = -1;
-            print(decide);
         }
     }
 }

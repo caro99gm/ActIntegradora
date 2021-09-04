@@ -2,18 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Neighbors : MonoBehaviour
-{
-
+//Obtener los nodos cercanos del nodo referenciado
+public class Neighbors : MonoBehaviour{
     public GameObject up;
     public GameObject down;
     public GameObject left;
     public GameObject right;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     void OnDrawGizmos(){
         Gizmos.color = Color.red;
@@ -22,10 +16,5 @@ public class Neighbors : MonoBehaviour
         if (this.down) Gizmos.DrawLine(transform.position, down.transform.position);
         if (this.left) Gizmos.DrawLine(transform.position, left.transform.position);
         if (this.right) Gizmos.DrawLine(transform.position, right.transform.position);
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

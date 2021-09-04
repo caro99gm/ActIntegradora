@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CreateBoxes : MonoBehaviour
-{
+//Crear cajas random en la escena
+public class CreateBoxes : MonoBehaviour{
     public GameObject box;
-
     public int NumBoxes = 15;
     List<GameObject> ArrBoxes;
 
-    void Start()
-    {
+    void Start(){
         ArrBoxes = new List<GameObject>();
         for(int i = 0; i < NumBoxes; i++){
             float x = Random.Range(-18 , -2);
